@@ -13,7 +13,7 @@ Harjutused:
 */
 
 // Harjutus 1
-/*
+
 int arv = 1;
 while (arv <= 10)
 {
@@ -87,11 +87,51 @@ while (arv != 0)
 }
 
 Console.WriteLine("Sisestatud arvude summa: " + arvudeSumma);
-*/
+
 // Harjutus 7
+
+for (int i = 1; i <= 10; i++)
+{
+    Console.WriteLine("7 x " + i + " = " + (7 * i));
+}
 
 // Harjutus 8
 
+for (int i = 1; i <= 100; i++)
+{
+    if (i % 3 == 0 && i % 5 == 0)
+    {
+        Console.WriteLine("Esimene arv, mis jagub nii 3-ga kui ka 5-ga: " + i);
+        break;
+    }
+}
+
 // Harjutus 9
 
+for (int i = 1; i <= 20; i++)
+{
+    if (i % 3 == 0)
+    {
+        continue;
+    }
+
+    Console.WriteLine(i);
+}
+
 // Harjutus 10
+
+for (int katse = 1; katse <= 3; katse++)
+{
+    Console.Write("Sisesta parool: ");
+    string sisestatudParool = Console.ReadLine();
+
+    if (sisestatudParool == "Pa$$w0rd")
+    {
+        Console.WriteLine("Parool on õige!");
+        break;
+    }
+    else
+    {
+        Console.WriteLine("Vale parool. Proovi uuesti.");
+    }
+}
