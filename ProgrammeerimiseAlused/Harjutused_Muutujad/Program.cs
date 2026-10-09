@@ -12,14 +12,17 @@ using System.Text;
 string nimi = "Kelly";
 int vanus = 33;
 int synniaasta = 1992;
-string[] lemmiktoidud = { "pasta", "hapukapsas", "kaneelirull" };
+string lemmiktoidud = "pasta, hapukapsas, kaneelirull";
+//string[] lemmiktoidud = { "pasta", "hapukapsas", "kaneelirull" }; // Kasutades massiivi
 
 Console.WriteLine("Nimi: " + nimi);
 Console.WriteLine("Vanus: " + vanus);
 Console.WriteLine("Sünniaasta: " + synniaasta);
-Console.WriteLine("Lemmiktoidud: " + lemmiktoidud[0] + ", " + lemmiktoidud[1] + ", " + lemmiktoidud[2]);
+Console.WriteLine("Lemmiktoidud: " + lemmiktoidud);
 
 /*
+Console.WriteLine("Lemmiktoidud: " + lemmiktoidud[0] + ", " + lemmiktoidud[1] + ", " + lemmiktoidud[2]);
+
 // Kasutades string.Join meetodit:
 Console.WriteLine(string.Join(", ", lemmiktoidud));
 
