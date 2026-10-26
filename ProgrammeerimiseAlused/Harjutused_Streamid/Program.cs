@@ -8,7 +8,7 @@ Harjutused:
 */
 
 // Harjutus 1
-/*
+
 using System;
 using System.IO;
 
@@ -27,12 +27,12 @@ class Program
         }
 
         string tee = Path.Combine(kaust, "log.txt");
-        
+
         using (StreamWriter kirjutaja = new StreamWriter(tee, true))
         {
             kirjutaja.WriteLine("Programm käivitus: " + kaivitamiseAeg);
             kirjutaja.WriteLine("Programm lõppes: " + DateTime.Now);
-        }  
+        }
     }
 }
 
@@ -137,7 +137,7 @@ class Program
         }
     }
 }
-*/
+
 // Harjutus 5
 
 using System;
