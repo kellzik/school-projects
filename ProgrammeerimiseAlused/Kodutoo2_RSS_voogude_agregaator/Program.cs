@@ -1,6 +1,9 @@
 /*
 Kodutöö 2:
-
+Kodutöö sisuks on kirjutada RSS-voogude agregaator, mis loeb sisse erinevate väljaannete uudisvood ning leiab 20 viimati avaldatud uudist 
+üle kõikide RSS-voogude. RSS on XML-i põhine masinloetav uudiste formaat. Uudised tuleb salvestada kõvekettale HTML-formaadis. 
+HTML peab sisaldama loendit (ul) uudistega, iga element loendis sisaldab uudise pealkirja (see on link uudisele), kirjeldust, 
+väljaande nime ja avaldamise aega. 
 
 Märkus: Koodi kommentaarid on lisatud õppetöö eesmärgil, et selgitada koodilõikude konteksti ja kinnistada arusaamist programmi toimimisest. 
 Kui koodis esineb mõni seni õppematerjalides käsitlemata meetod jmt, siis selgitab kommentaar selle eesmärki.
@@ -169,10 +172,10 @@ class Program
                 return alamelement.Value;
             }
         }
-        // Tagastan tühja teksti, kui elementi ei leitud.
         return "";
     }
 
+    // Loon uue meetodi LeiaLink, mis otsib uudise XML-kirjest link-elementi ja tagastab selle sisu. Kui elementi ei leita, tagastab tühja teksti.
     static string LeiaLink(XElement uudiseElement)
     {
         // Otsin uudise seest "link" elementi.
@@ -180,11 +183,9 @@ class Program
         {
             if (alamelement.Name.LocalName == "link")
             {
-                // RSS-voos võib aadress olla elemendi tekstina.
                 return alamelement.Value;
             }
         }
-        // Tagastan tühja teksti, kui link puudub.
         return "";
     }
 
