@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Kodutoo2_RSS_voogude_agregaator;
+namespace rssVoogudeAgregaator;
 
 public class RssItem
 {
@@ -52,25 +52,78 @@ class Program
 
         using HttpClient client = new HttpClient();
 
+        List<XElement> koikUudised = new List<XElement>();
+
         foreach (string vooAadress in uudisteVoogudeAadressid)
         {
             string rssXmlTekst = await client.GetStringAsync(vooAadress);
             List<RssItem> uudised = LoeUudised(rssXmlTekst);
 
-            // Loen igast uudisteportaalist sisse viimased 20 uudist
-            foreach (RssItem uudis in uudised.Take(20))
+            // Lisan kõigi portaalide uudised ajutisse loendisse.
+            foreach (RssItem uudis in uudised)
             {
-                juur.Add(new XElement("uudis",
+                XElement uudiseElement = new XElement("uudis",
                     new XAttribute("avaldaja", vooAadress),
                     new XElement("pealkiri", uudis.Pealkiri),
                     new XElement("link", uudis.LinkUudisele),
                     new XElement("kirjeldus", uudis.Kirjeldus),
                     new XElement("avaldatud", uudis.AvaldamiseAeg)
-                ));
+                );
+
+                koikUudised.Add(uudiseElement);
             }
         }
 
+        // Järjestan uudised avaldamisaja järgi (uus -> vana) ja võtan 20 esimest.
+        List<XElement> viimased20Uudist = koikUudised
+            .OrderByDescending(uudis =>
+                DateTimeOffset.Parse(
+                    LeiaAlamelemendiVaartus(uudis, "avaldatud"),
+                    System.Globalization.CultureInfo.InvariantCulture))
+            .Take(20)
+            .ToList();
+
+        // Asendan XML-faili senise sisu selle käivitusel 20 uusima uudisega.
+        juur.RemoveNodes();
+        foreach (XElement uudis in viimased20Uudist)
+        {
+            juur.Add(uudis);
+        }
+
         dokument.Save(failiTee);
+
+        string htmlFailiTee = Path.Combine(kataloog, "uudised.html");
+
+        using (FileStream failiVoog = new FileStream(htmlFailiTee, FileMode.Create))
+        using (StreamWriter kirjutaja = new StreamWriter(failiVoog))
+        {
+            kirjutaja.WriteLine("<ul>");
+
+            foreach (XElement uudis in viimased20Uudist)
+            {
+                string pealkiri = LeiaAlamelemendiVaartus(uudis, "pealkiri");
+                string link = LeiaAlamelemendiVaartus(uudis, "link");
+                string kirjeldus = LeiaAlamelemendiVaartus(uudis, "kirjeldus");
+                string avaldamiseAeg = LeiaAlamelemendiVaartus(uudis, "avaldatud");
+
+                // Praeguses XML-is on avaldaja voo aadress atribuudis "avaldaja".
+                string avaldaja = "";
+                XAttribute avaldajaAtribuut = uudis.Attribute("avaldaja");
+
+                if (avaldajaAtribuut != null)
+                {
+                    avaldaja = avaldajaAtribuut.Value;
+                }
+
+                kirjutaja.WriteLine("<li>");
+                kirjutaja.WriteLine("<a href=\"" + link + "\">" + pealkiri + "</a><br />");
+                kirjutaja.WriteLine(avaldamiseAeg + " | " + avaldaja + "<br />");
+                kirjutaja.WriteLine(kirjeldus);
+                kirjutaja.WriteLine("</li>");
+            }
+
+            kirjutaja.WriteLine("</ul>");
+        }
     }
 
     static List<RssItem> LoeUudised(string rssTekst)
@@ -134,4 +187,5 @@ class Program
         // Tagastan tühja teksti, kui link puudub.
         return "";
     }
+
 }
